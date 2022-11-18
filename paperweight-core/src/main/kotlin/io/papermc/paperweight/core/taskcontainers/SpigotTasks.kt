@@ -22,10 +22,13 @@
 
 package io.papermc.paperweight.core.taskcontainers
 
+import com.github.salomonbrys.kotson.fromJson
 import io.papermc.paperweight.DownloadService
+import io.papermc.paperweight.common.taskcontainers.VanillaTasks
 import io.papermc.paperweight.core.ext
 import io.papermc.paperweight.core.extension.PaperweightCoreExtension
 import io.papermc.paperweight.tasks.*
+import io.papermc.paperweight.tasks.mm.ResetSubmodules
 import io.papermc.paperweight.util.*
 import io.papermc.paperweight.util.constants.*
 import java.nio.file.Path
@@ -43,6 +46,15 @@ open class SpigotTasks(
     extension: PaperweightCoreExtension = project.ext,
     downloadService: Provider<DownloadService> = project.download,
 ) : VanillaTasks(project) {
+
+    // Configuration won't necessarily always run, so do it as the first task when it's needed as well
+    val initSubmodules by tasks.registering<InitSubmodules>()
+
+    val resetSubmodules by tasks.registering<ResetSubmodules>()
+
+    val buildDataInfo: Provider<BuildDataInfo> = project.contents(extension.craftBukkit.buildDataInfo) {
+        gson.fromJson(it)
+    }
 
     val addAdditionalSpigotMappings by tasks.registering<AddAdditionalSpigotMappings> {
         dependsOn(initSubmodules)

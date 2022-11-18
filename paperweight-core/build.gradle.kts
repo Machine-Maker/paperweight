@@ -5,6 +5,7 @@ plugins {
 
 dependencies {
     shade(projects.paperweightLib)
+    shade(projects.paperweightCommonTasks)
 
     implementation(libs.kotson)
 }

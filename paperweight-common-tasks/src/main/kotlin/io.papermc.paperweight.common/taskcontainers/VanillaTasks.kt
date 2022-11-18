@@ -20,7 +20,7 @@
  * USA
  */
 
-package io.papermc.paperweight.core.taskcontainers
+package io.papermc.paperweight.common.taskcontainers
 
 import io.papermc.paperweight.tasks.*
 import io.papermc.paperweight.util.*

@@ -20,11 +20,10 @@
  * USA
  */
 
-package io.papermc.paperweight.core.taskcontainers
+package io.papermc.paperweight.common.taskcontainers
 
 import io.papermc.paperweight.DownloadService
-import io.papermc.paperweight.core.ext
-import io.papermc.paperweight.core.extension.PaperweightCoreExtension
+import io.papermc.paperweight.common.*
 import io.papermc.paperweight.tasks.*
 import io.papermc.paperweight.util.*
 import io.papermc.paperweight.util.constants.*
@@ -40,7 +39,7 @@ open class InitialTasks(
     project: Project,
     tasks: TaskContainer = project.tasks,
     cache: Path = project.layout.cache,
-    extension: PaperweightCoreExtension = project.ext,
+    extension: CommonPaperweightCoreExtension = project.commonExt,
     downloadService: Provider<DownloadService> = project.download
 ) {
 

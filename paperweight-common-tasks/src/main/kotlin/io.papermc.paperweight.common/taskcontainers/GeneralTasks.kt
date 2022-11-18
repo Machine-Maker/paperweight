@@ -20,16 +20,12 @@
  * USA
  */
 
-package io.papermc.paperweight.core.taskcontainers
+package io.papermc.paperweight.common.taskcontainers
 
-import com.github.salomonbrys.kotson.fromJson
-import io.papermc.paperweight.core.ext
-import io.papermc.paperweight.core.extension.PaperweightCoreExtension
+import io.papermc.paperweight.common.*
 import io.papermc.paperweight.tasks.*
-import io.papermc.paperweight.tasks.mm.ResetSubmodules
 import io.papermc.paperweight.util.*
 import org.gradle.api.Project
-import org.gradle.api.provider.Provider
 import org.gradle.api.tasks.TaskContainer
 import org.gradle.kotlin.dsl.*
 
@@ -37,17 +33,8 @@ import org.gradle.kotlin.dsl.*
 open class GeneralTasks(
     project: Project,
     tasks: TaskContainer = project.tasks,
-    extension: PaperweightCoreExtension = project.ext,
+    extension: CommonPaperweightCoreExtension = project.commonExt,
 ) : InitialTasks(project) {
-
-    // Configuration won't necessarily always run, so do it as the first task when it's needed as well
-    val initSubmodules by tasks.registering<InitSubmodules>()
-
-    val resetSubmodules by tasks.registering<ResetSubmodules>()
-
-    val buildDataInfo: Provider<BuildDataInfo> = project.contents(extension.craftBukkit.buildDataInfo) {
-        gson.fromJson(it)
-    }
 
     val filterVanillaJar by tasks.registering<FilterJar> {
         inputJar.set(extractFromBundler.flatMap { it.serverJar })

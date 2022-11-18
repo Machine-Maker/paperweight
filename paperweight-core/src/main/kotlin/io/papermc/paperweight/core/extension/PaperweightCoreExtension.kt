@@ -22,6 +22,7 @@
 
 package io.papermc.paperweight.core.extension
 
+import io.papermc.paperweight.common.CommonPaperweightCoreExtension
 import io.papermc.paperweight.util.*
 import io.papermc.paperweight.util.constants.*
 import java.util.Locale
@@ -30,11 +31,10 @@ import org.gradle.api.Project
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.ProjectLayout
 import org.gradle.api.model.ObjectFactory
-import org.gradle.api.provider.ListProperty
 import org.gradle.api.provider.Property
 import org.gradle.kotlin.dsl.*
 
-open class PaperweightCoreExtension(project: Project, objects: ObjectFactory, layout: ProjectLayout) {
+open class PaperweightCoreExtension(project: Project, objects: ObjectFactory, layout: ProjectLayout) : CommonPaperweightCoreExtension(objects) {
 
     @Suppress("MemberVisibilityCanBePrivate")
     val workDir: DirectoryProperty = objects.dirWithDefault(layout, "work")
@@ -42,7 +42,6 @@ open class PaperweightCoreExtension(project: Project, objects: ObjectFactory, la
     @Suppress("unused")
     val superDir: DirectoryProperty = objects.dirFrom(workDir, "SuperPaper")
 
-    val minecraftVersion: Property<String> = objects.property()
     val serverProject: Property<Project> = objects.property()
 
     val mainClass: Property<String> = objects.property<String>().convention("org.bukkit.craftbukkit.Main")
@@ -53,10 +52,6 @@ open class PaperweightCoreExtension(project: Project, objects: ObjectFactory, la
     val paramMappingsRepo: Property<String> = objects.property()
     val decompileRepo: Property<String> = objects.property()
     val remapRepo: Property<String> = objects.property()
-
-    val vanillaJarIncludes: ListProperty<String> = objects.listProperty<String>().convention(
-        listOf("/*.class", "/net/minecraft/**", "/com/mojang/math/**")
-    )
 
     @Suppress("MemberVisibilityCanBePrivate")
     val craftBukkit = CraftBukkitExtension(objects, workDir)
