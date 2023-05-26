@@ -47,6 +47,15 @@ open class SpigotTasks(
     downloadService: Provider<DownloadService> = project.download,
 ) : VanillaTasks(project) {
 
+    val collectAtsFromPatches by tasks.registering<CollectATsFromPatches> {
+        patchDir.set(extension.paper.spigotServerPatchDir)
+    }
+
+    val mergePaperAts by tasks.registering<MergeAccessTransforms> {
+        firstFile.set(extension.paper.additionalAts.fileExists(project))
+        secondFile.set(collectAtsFromPatches.flatMap { it.outputFile })
+    }
+
     // Configuration won't necessarily always run, so do it as the first task when it's needed as well
     val initSubmodules by tasks.registering<InitSubmodules>()
 
