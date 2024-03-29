@@ -190,7 +190,7 @@ open class SpigotTasks(
         mojangMappedVanillaJar.set(fixJar.flatMap { it.outputJar })
         vanillaRemappedSpigotJar.set(filterSpigotExcludes.flatMap { it.outputZip })
         spigotDeps.from(downloadSpigotDependencies.map { it.outputDir.asFileTree })
-        additionalAts.set(mergePaperAts.flatMap { it.outputFile })
+        additionalAts.set(project.rootDir.resolve("mergePaperAts.at"))
     }
 
     val remapGeneratedAt by tasks.registering<RemapAccessTransform> {

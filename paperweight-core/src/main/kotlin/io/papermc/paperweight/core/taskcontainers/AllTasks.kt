@@ -57,12 +57,12 @@ open class AllTasks(
 
     val mergeAdditionalAts by tasks.registering<MergeAccessTransforms> {
         firstFile.set(mergeGeneratedAts.flatMap { it.outputFile })
-        secondFile.set(mergePaperAts.flatMap { it.outputFile })
+        secondFile.set(project.rootDir.resolve("mergePaperAts.at"))
     }
 
     val applyMergedAt by tasks.registering<ApplyAccessTransform> {
         inputJar.set(fixJar.flatMap { it.outputJar })
-        atFile.set(mergeAdditionalAts.flatMap { it.outputFile })
+        atFile.set(project.rootDir.resolve("mergeAdditionalAts.at"))
     }
 
     val copyResources by tasks.registering<CopyResources> {
@@ -263,7 +263,7 @@ open class AllTasks(
         mojangMappedVanillaJar.set(fixJar.flatMap { it.outputJar })
         vanillaRemappedSpigotJar.set(filterSpigotExcludes.flatMap { it.outputZip })
         spigotDeps.from(downloadSpigotDependencies.map { it.outputDir.asFileTree })
-        additionalAts.set(mergePaperAts.flatMap { it.outputFile })
+        additionalAts.set(project.rootDir.resolve("mergePaperAts.at"))
         bukkitApiDir.set(extension.craftBukkit.bukkitDir)
     }
 
@@ -306,7 +306,7 @@ open class AllTasks(
         mojangMappedVanillaJar.set(fixJar.flatMap { it.outputJar })
         vanillaRemappedSpigotJar.set(filterSpigotExcludes.flatMap { it.outputZip })
         spigotDeps.from(downloadSpigotDependencies.map { it.outputDir.asFileTree })
-        additionalAts.set(mergePaperAts.flatMap { it.outputFile })
+        additionalAts.set(project.rootDir.resolve("mergePaperAts.at"))
         remappedOutputSources.set(layout.cacheDir(SPIGOT_DECOMPILER_MOJMAP_SRC))
     }
 
@@ -330,7 +330,7 @@ open class AllTasks(
         mojangMappedVanillaJar.set(fixJar.flatMap { it.outputJar })
         vanillaRemappedSpigotJar.set(filterSpigotExcludes.flatMap { it.outputZip })
         spigotDeps.from(downloadSpigotDependencies.map { it.outputDir.asFileTree })
-        additionalAts.set(mergePaperAts.flatMap { it.outputFile })
+        additionalAts.set(project.rootDir.resolve("mergePaperAts.at"))
         spigotApiDir.set(patchSpigotApi.flatMap { it.outputDir })
         sourcePatchDir.set(remappedCraftBukkitSource.dir(SOURCE_PATCHES))
         unneededFiles.set(listOf("applyPatches.sh", "CONTRIBUTING.md", "makePatches.sh", "README.md", "checkstyle.xml"))
@@ -412,5 +412,23 @@ open class AllTasks(
         craftBukkitDir.set(finalizeServerHistory.flatMap { it.outputDir })
         paperDir.set(finalizePaperHistory.flatMap { it.outputDir })
         outputDir.set(extension.superDir)
+    }
+
+    val superPaperImportMcDev by tasks.registering<SuperPaperImportMcDev> {
+        group = "super-paper"
+        spigotMcDevSrc.set(spigotDecompilerMojmapRemap.flatMap { it.remappedOutputSources })
+        backupFiles.set(libraryFilesToImportForCb)
+        paperMcDevSrc.set(decompileJar.flatMap { it.decompiledSource })
+        mcLibrariesDir.set(downloadMcLibrariesSources.flatMap { it.outputDir })
+        spigotLibrariesDir.set(downloadSpigotDependencies.flatMap { it.outputSourcesDir })
+        perFilePatchDir.set(project.rootDir.resolve("paper-server/patches/sources"))
+        spigotRecompiledClasses.set(project.rootDir.resolve("spigotRecompiledClasses.txt"))
+        outputDir.set(project.rootDir.resolve("paper-server"))
+    }
+
+    val superPaperApplyPatches by tasks.registering<ApplyPerFilePatches> {
+        group = "super-paper"
+        targetDir.set(superPaperImportMcDev.flatMap { it.outputDir })
+        perFilePatches.set(project.rootDir.resolve("paper-server/patches/sources"))
     }
 }

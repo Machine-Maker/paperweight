@@ -249,7 +249,7 @@ fun relativeMove(baseDir: Path, file: Path, outputDir: Path) {
 }
 
 fun javaFileName(rootDir: Path, file: Path): String {
-    return file.relativeTo(rootDir).toString().replaceAfterLast('.', "java")
+    return file.relativeTo(rootDir).toString().replaceAfter('.', "java")
 }
 
 private fun relativeCopyOrMove(baseDir: Path, file: Path, outputDir: Path, move: Boolean) {
